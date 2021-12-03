@@ -68,6 +68,15 @@ if __name__ == '__main__':
                     if orderDetail['state'] == 'COMPLETE':
                         break
                     time.sleep(10)
+                ### send BTC to italy
+                itBTCAddress = itAccount.get_funding_address(asset='XBT')
+                itBTCAddress = itBTCAddress['address']
+                
+                res = saAccount.get_balances(assets='XBT')
+                saBTCBalance = res["balance"][0]["balance"]
+
+                saAccount.send(address=itBTCAddress, amount=saBTCBalance, currency="XBT")
+                
             except Exception as e:
                 print("Error while buying BTC in South Africa", e)
         ##res = saAccount.list_user_trades(pair='XBTZAR')
