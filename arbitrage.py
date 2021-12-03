@@ -37,19 +37,30 @@ if __name__ == '__main__':
     while True:
         ## get exchange rate between zar and euro
         response = requests.get("https://xecdapi.xe.com/v1/convert_from/?from=EUR&to=ZAR&amount=1", auth=HTTPBasicAuth('liming419944535', 'qajfi3hr0ug3g71ulc3n25ben8'))
+        xrate = 0
         if response.status_code == 200:
             xrateJson = response.json()
-            xrate = xrateJson['to'][0]['mid']
+            xrate = float(xrateJson['to'][0]['mid'])
             print(xrate)
         else:
             print("Can't fetch exchange rate, wait until get exact exchange rate ....")
             continue
         
         res = saAccount.get_ticker(pair='XBTZAR')
-        _br = res['last_trade'] # BTC to ZAR
+        _br = float(res['last_trade']) # BTC to ZAR
         res = itAccount.get_ticker(pair='XBTEUR')
-        _be = res['last_trade'] # BTC to EURO
+        _be = float(res['last_trade']) # BTC to EURO
         print(_br, _be)
+        arbitrageRate = (_br - _be * xrate) / (_be * xrate) * 100.0
+        print( "arbitrageRate", arbitrageRate)
+        
+        ## when arbitrage rate is below than 1%, then send BTC to italy
+        if arbitrageRate < 1:            
+            res = saAccount.get_balances(assets='ZAR')
+            saZarBalance = res["balance"][0]["balance"]
+            saZAR = res["balance"][0]["account_id"]
+            orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", base_account_id=saZAR, base_volume=saZarBalance)
+            orderResp["order_id"]
         ##res = saAccount.list_user_trades(pair='XBTZAR')
         ##print(res)
         time.sleep(1)
