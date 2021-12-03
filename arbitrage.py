@@ -37,7 +37,10 @@ if __name__ == '__main__':
     while True:
         ## get exchange rate between zar and euro
         response = requests.get("https://xecdapi.xe.com/v1/convert_from/?from=EUR&to=ZAR&amount=1", auth=HTTPBasicAuth('liming419944535', 'qajfi3hr0ug3g71ulc3n25ben8'))
-        print(response.json())
+        if response.status_code == 200:
+            xrateJson = response.json()
+            xrate = xrateJson['to'][0]['mid']
+            print(xrate)
         ##res = saAccount.list_user_trades(pair='XBTZAR')
         ##print(res)
         time.sleep(1)
