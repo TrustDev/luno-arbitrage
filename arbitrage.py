@@ -30,13 +30,16 @@ if __name__ == '__main__':
                 itBTC = bal['account_id']
             elif bal['asset'] == 'EUR':
                 itEuro = bal['account_id']
-    print(saBTC, saZAR, itBTC, itEuro)    
+    print(saBTC, saZAR, itBTC, itEuro)
     #######################
 
-    #### main logic #########
+    #### main logic #####
     while True:
-        res = saAccount.list_user_trades(pair='XBTZAR')
-        print(res)
-        time.sleep(0.5)
+        ## get exchange rate between zar and euro
+        response = requests.get("https://xecdapi.xe.com/v1/convert_from/?from=EUR&to=ZAR&amount=1", auth=HTTPBasicAuth('liming419944535', 'qajfi3hr0ug3g71ulc3n25ben8'))
+        print(response.json())
+        ##res = saAccount.list_user_trades(pair='XBTZAR')
+        ##print(res)
+        time.sleep(1)
     
     
