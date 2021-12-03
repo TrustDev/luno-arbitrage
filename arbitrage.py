@@ -41,6 +41,14 @@ if __name__ == '__main__':
             xrateJson = response.json()
             xrate = xrateJson['to'][0]['mid']
             print(xrate)
+        else:
+            print("Can't fetch exchange rate, wait until get exact exchange rate ....")
+            continue
+        
+        res = saAccount.get_ticker(pair='XBTZAR')
+        _br = res['last_trade'] # BTC to ZAR
+
+        print(res)
         ##res = saAccount.list_user_trades(pair='XBTZAR')
         ##print(res)
         time.sleep(1)
