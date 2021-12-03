@@ -47,8 +47,9 @@ if __name__ == '__main__':
         
         res = saAccount.get_ticker(pair='XBTZAR')
         _br = res['last_trade'] # BTC to ZAR
-
-        print(res)
+        res = itAccount.get_ticker(pair='XBTEUR')
+        _be = res['last_trade'] # BTC to EURO
+        print(_br, _be)
         ##res = saAccount.list_user_trades(pair='XBTZAR')
         ##print(res)
         time.sleep(1)
