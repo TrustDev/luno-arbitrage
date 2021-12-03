@@ -55,12 +55,21 @@ if __name__ == '__main__':
         print( "arbitrageRate", arbitrageRate)
         
         ## when arbitrage rate is below than 1%, then send BTC to italy
-        if arbitrageRate < 1:            
+        if arbitrageRate < 2:            
             res = saAccount.get_balances(assets='ZAR')
             saZarBalance = res["balance"][0]["balance"]
-            saZAR = res["balance"][0]["account_id"]
-            orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", base_account_id=saZAR, base_volume=saZarBalance)
-            orderResp["order_id"]
+            saZAR = res["balance"][0]["account_id"]            
+            try:
+                orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", counter_account_id=saZAR, counter_volume=saZarBalance)
+                orderId = orderResp["order_id"]
+                while True:
+                    orderDetail = saAccount.get_order(orderId)
+                    print("Waiting for Buy BTC in South After....", orderId, orderDetail['state'])
+                    if orderDetail['state'] == 'COMPLETE':
+                        break
+                    time.sleep(10)
+            except Exception as e:
+                print("Error while buying BTC in South Africa", e)
         ##res = saAccount.list_user_trades(pair='XBTZAR')
         ##print(res)
         time.sleep(1)
