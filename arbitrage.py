@@ -114,20 +114,20 @@ if __name__ == '__main__':
                         time.sleep(10)
                 except Exception as e:
                     print("Error while buying BTC in Italy", e)
-                ### send BTC to italy
-                itBTCAddress = itAccount.get_funding_address(asset='XBT')
-                itBTCAddress = itBTCAddress['address']
+                ### send BTC to South Africa
+                saBTCAddress = saAccount.get_funding_address(asset='XBT')
+                saBTCAddress = saBTCAddress['address']
                 
-                res = saAccount.get_balances(assets='XBT')
-                saBTCBalance = res["balance"][0]["balance"]
-
-                saAccount.send(address=itBTCAddress, amount=saBTCBalance, currency="XBT")
-                
-                ### exchange to EURO                
                 res = itAccount.get_balances(assets='XBT')
                 itBTCBalance = res["balance"][0]["balance"]
-                itBTC = res["balance"][0]["account_id"] 
-                orderResp = itAccount.post_market_order(pair="XBTEUR", type="SELL", base_account_id=itBTC, base_volume=itBTCBalance)
+
+                itAccount.send(address=saBTCAddress, amount=itBTCBalance, currency="XBT")
+                
+                ### exchange to ZAR                
+                res = saAccount.get_balances(assets='XBT')
+                saBTCBalance = res["balance"][0]["balance"]
+                saBTC = res["balance"][0]["account_id"] 
+                orderResp = saAccount.post_market_order(pair="XBTZAR", type="SELL", base_account_id=saBTC, base_volume=saBTCBalance)
                 orderId = orderResp["order_id"]
                 while True:
                     orderDetail = saAccount.get_order(orderId)
