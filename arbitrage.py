@@ -108,12 +108,12 @@ if __name__ == '__main__':
                     orderId = orderResp["order_id"]
                     while True:
                         orderDetail = saAccount.get_order(orderId)
-                        print("Waiting for Buy BTC in South After....", orderId, orderDetail['state'])
+                        print("Waiting for Buy BTC in Italy....", orderId, orderDetail['state'])
                         if orderDetail['state'] == 'COMPLETE':
                             break
                         time.sleep(10)
                 except Exception as e:
-                    print("Error while buying BTC in South Africa", e)
+                    print("Error while buying BTC in Italy", e)
                 ### send BTC to italy
                 itBTCAddress = itAccount.get_funding_address(asset='XBT')
                 itBTCAddress = itBTCAddress['address']
