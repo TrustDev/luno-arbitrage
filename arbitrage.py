@@ -7,8 +7,8 @@ from requests.auth import HTTPBasicAuth
 if __name__ == '__main__':
     saAccount = Client(api_key_id='bdc6udywrcxdy',
                api_key_secret='6QhflvPxdqrhRDo1VU-qw3sdZXwCLlTCOIGBWyOkfeY')
-    itAccount = Client(api_key_id='bdc6udywrcxdy',
-               api_key_secret='6QhflvPxdqrhRDo1VU-qw3sdZXwCLlTCOIGBWyOkfeY')
+    itAccount = Client(api_key_id='fngu2pkxv37wu',
+               api_key_secret='Yc40rf1DBmXMP9GZ_6orCEila7-iYCCwq2Ffv44bzzE')
 
     ##### Pre test for accounts are ready #########
     res = saAccount.get_balances()
@@ -55,19 +55,23 @@ if __name__ == '__main__':
         print( "arbitrageRate", arbitrageRate)
         
         ## when arbitrage rate is below than 1%, then send BTC to italy
-        if arbitrageRate < 2:            
+        if arbitrageRate < 4:            
             res = saAccount.get_balances(assets='ZAR')
             saZarBalance = res["balance"][0]["balance"]
             saZAR = res["balance"][0]["account_id"]            
             try:
-                orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", counter_account_id=saZAR, counter_volume=saZarBalance)
-                orderId = orderResp["order_id"]
-                while True:
-                    orderDetail = saAccount.get_order(orderId)
-                    print("Waiting for Buy BTC in South After....", orderId, orderDetail['state'])
-                    if orderDetail['state'] == 'COMPLETE':
-                        break
-                    time.sleep(10)
+                ### selling BTC to ZAR in South Africa
+                try:
+                    orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", counter_account_id=saZAR, counter_volume=saZarBalance)
+                    orderId = orderResp["order_id"]
+                    while True:
+                        orderDetail = saAccount.get_order(orderId)
+                        print("Waiting for Buy BTC in South After....", orderId, orderDetail['state'])
+                        if orderDetail['state'] == 'COMPLETE':
+                            break
+                        time.sleep(10)
+                except Exception as e:
+                    print("Error while buying BTC in South Africa", e)
                 ### send BTC to italy
                 itBTCAddress = itAccount.get_funding_address(asset='XBT')
                 itBTCAddress = itBTCAddress['address']
@@ -77,8 +81,21 @@ if __name__ == '__main__':
 
                 saAccount.send(address=itBTCAddress, amount=saBTCBalance, currency="XBT")
                 
+                ### exchange to EURO                
+                res = itAccount.get_balances(assets='XBT')
+                itBTCBalance = res["balance"][0]["balance"]
+                itBTC = res["balance"][0]["account_id"] 
+                orderResp = itAccount.post_market_order(pair="XBTEUR", type="SELL", base_account_id=itBTC, base_volume=itBTCBalance)
+                orderId = orderResp["order_id"]
+                while True:
+                    orderDetail = saAccount.get_order(orderId)
+                    print("Waiting for Sell BTC in Italy After....", orderId, orderDetail['state'])
+                    if orderDetail['state'] == 'COMPLETE':
+                        break
+                    time.sleep(10)
+
             except Exception as e:
-                print("Error while buying BTC in South Africa", e)
+                print("Error while sending BTC to Italy", e)
         ##res = saAccount.list_user_trades(pair='XBTZAR')
         ##print(res)
         time.sleep(1)
