@@ -88,7 +88,7 @@ if __name__ == '__main__':
                 orderResp = itAccount.post_market_order(pair="XBTEUR", type="SELL", base_account_id=itBTC, base_volume=itBTCBalance)
                 orderId = orderResp["order_id"]
                 while True:
-                    orderDetail = saAccount.get_order(orderId)
+                    orderDetail = itAccount.get_order(orderId)
                     print("Waiting for Sell BTC in Italy After....", orderId, orderDetail['state'])
                     if orderDetail['state'] == 'COMPLETE':
                         break
