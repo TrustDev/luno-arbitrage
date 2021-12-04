@@ -104,7 +104,7 @@ if __name__ == '__main__':
             try:
                 ### selling BTC to Euro in Italy
                 try:
-                    orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", counter_account_id=saZAR, counter_volume=saZarBalance)
+                    orderResp = itAccount.post_market_order(pair="XBTEUR", type="BUY", counter_account_id=itEuro, counter_volume=itEuroBalance)
                     orderId = orderResp["order_id"]
                     while True:
                         orderDetail = saAccount.get_order(orderId)
