@@ -71,13 +71,13 @@ if __name__ == '__main__':
                             break
                         time.sleep(10)
                 except Exception as e:
-                    print("Error while buying BTC in South Africa", e)
+                    print("Error while buying BTC in South Africa", e, saZarBalance)
                 ### send BTC to italy
                 itBTCAddress = itAccount.get_funding_address(asset='XBT')
                 itBTCAddress = itBTCAddress['address']
                 
                 res = saAccount.get_balances(assets='XBT')
-                saBTCBalance = res["balance"][0]["balance"]- btcSendingFee
+                saBTCBalance = float(res["balance"][0]["balance"]) - btcSendingFee
 
                 saAccount.send(address=itBTCAddress, amount=saBTCBalance, currency="XBT")
                 
@@ -119,7 +119,7 @@ if __name__ == '__main__':
                 saBTCAddress = saBTCAddress['address']
                 
                 res = itAccount.get_balances(assets='XBT')
-                itBTCBalance = res["balance"][0]["balance"]- btcSendingFee
+                itBTCBalance = float(res["balance"][0]["balance"]) - btcSendingFee
 
                 itAccount.send(address=saBTCAddress, amount=itBTCBalance, currency="XBT")
                 
