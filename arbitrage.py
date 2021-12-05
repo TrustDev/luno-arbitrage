@@ -9,7 +9,7 @@ if __name__ == '__main__':
                api_key_secret='6QhflvPxdqrhRDo1VU-qw3sdZXwCLlTCOIGBWyOkfeY')
     itAccount = Client(api_key_id='fngu2pkxv37wu',
                api_key_secret='Yc40rf1DBmXMP9GZ_6orCEila7-iYCCwq2Ffv44bzzE')
-
+    btcSendingFee = 0.000006
     ##### Pre test for accounts are ready #########
     res = saAccount.get_balances()
     saBTC = ''
@@ -77,7 +77,7 @@ if __name__ == '__main__':
                 itBTCAddress = itBTCAddress['address']
                 
                 res = saAccount.get_balances(assets='XBT')
-                saBTCBalance = res["balance"][0]["balance"]
+                saBTCBalance = res["balance"][0]["balance"]- btcSendingFee
 
                 saAccount.send(address=itBTCAddress, amount=saBTCBalance, currency="XBT")
                 
@@ -119,7 +119,7 @@ if __name__ == '__main__':
                 saBTCAddress = saBTCAddress['address']
                 
                 res = itAccount.get_balances(assets='XBT')
-                itBTCBalance = res["balance"][0]["balance"]
+                itBTCBalance = res["balance"][0]["balance"]- btcSendingFee
 
                 itAccount.send(address=saBTCAddress, amount=itBTCBalance, currency="XBT")
                 
