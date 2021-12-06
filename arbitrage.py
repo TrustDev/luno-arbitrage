@@ -82,8 +82,9 @@ if __name__ == '__main__':
                 res = saAccount.get_balances(assets='XBT')
                 saBTCBalance = float(res["balance"][0]["balance"])
                 sendAmount = round(saBTCBalance, 8)
-                saAccount.send(address=itEmail, amount=sendAmount, currency="XBT")
-                print("Send BTC to Italy Success", sendAmount)
+                if sendAmount > 0:
+                    saAccount.send(address=itEmail, amount=sendAmount, currency="XBT")
+                    print("Send BTC to Italy Success", sendAmount)
                 ## wait until BTC arrived
                 while True:
                     res = saAccount.get_balances(assets='XBT')
@@ -101,7 +102,7 @@ if __name__ == '__main__':
                     orderId = orderResp["order_id"]
                     while True:
                         orderDetail = itAccount.get_order(orderId)
-                        print("Waiting for Sell BTC in Italy After....", orderId, orderDetail['state'])
+                        print("Waiting for Sell BTC in Italy....", orderId, orderDetail['state'])
                         if orderDetail['state'] == 'COMPLETE':
                             break
                         time.sleep(10)
@@ -120,7 +121,7 @@ if __name__ == '__main__':
                         orderResp = itAccount.post_market_order(pair="XBTEUR", type="BUY", counter_account_id=itEuro, counter_volume=itEuroBalance)
                         orderId = orderResp["order_id"]
                         while True:
-                            orderDetail = saAccount.get_order(orderId)
+                            orderDetail = itAccount.get_order(orderId)
                             print("Waiting for Buy BTC in Italy....", orderId, orderDetail['state'])
                             if orderDetail['state'] == 'COMPLETE':
                                 break
@@ -130,8 +131,10 @@ if __name__ == '__main__':
                 ### send BTC to South Africa                
                 res = itAccount.get_balances(assets='XBT')
                 itBTCBalance = float(res["balance"][0]["balance"])
-
-                itAccount.send(address=saEmail, amount=round(itBTCBalance, 8), currency="XBT")
+                sendAmount = round(itBTCBalance, 8)
+                if itBTCBalance > 0:
+                    itAccount.send(address=saEmail, amount=sendAmount, currency="XBT")
+                    print("Send BTC to South Africa Success", sendAmount)
                 
                 ## wait until BTC arrived
                 while True:
@@ -150,13 +153,13 @@ if __name__ == '__main__':
                     orderId = orderResp["order_id"]
                     while True:
                         orderDetail = saAccount.get_order(orderId)
-                        print("Waiting for Sell BTC in Italy After....", orderId, orderDetail['state'])
+                        print("Waiting for Sell BTC in Italy....", orderId, orderDetail['state'])
                         if orderDetail['state'] == 'COMPLETE':
                             break
                         time.sleep(10)
 
             except Exception as e:
-                print("Error while sending BTC to Italy", e)
+                print("Error while sending BTC to Italy", e, "Amount:", sendAmount)
         ##res = saAccount.list_user_trades(pair='XBTZAR')
         ##print(res)
         time.sleep(30)
