@@ -124,7 +124,7 @@ if __name__ == '__main__':
                 res = itAccount.get_balances(assets='XBT')
                 itBTCBalance = float(res["balance"][0]["balance"])
 
-                itAccount.send(address=saBTCAddress, amount=round(itBTCBalance, 8), currency="XBT")
+                itAccount.send(address=saEmail, amount=round(itBTCBalance, 8), currency="XBT")
                 
                 ### exchange to ZAR                
                 res = saAccount.get_balances(assets='XBT')
