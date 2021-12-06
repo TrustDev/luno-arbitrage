@@ -95,14 +95,15 @@ if __name__ == '__main__':
                 res = itAccount.get_balances(assets='XBT')
                 itBTCBalance = float(res["balance"][0]["balance"])
                 itBTC = res["balance"][0]["account_id"] 
-                orderResp = itAccount.post_market_order(pair="XBTEUR", type="SELL", base_account_id=itBTC, base_volume=round(itBTCBalance-itTradeFee, 4))
-                orderId = orderResp["order_id"]
-                while True:
-                    orderDetail = itAccount.get_order(orderId)
-                    print("Waiting for Sell BTC in Italy After....", orderId, orderDetail['state'])
-                    if orderDetail['state'] == 'COMPLETE':
-                        break
-                    time.sleep(10)
+                if itBTCBalance > itTradeFee:
+                    orderResp = itAccount.post_market_order(pair="XBTEUR", type="SELL", base_account_id=itBTC, base_volume=round(itBTCBalance-itTradeFee, 4))
+                    orderId = orderResp["order_id"]
+                    while True:
+                        orderDetail = itAccount.get_order(orderId)
+                        print("Waiting for Sell BTC in Italy After....", orderId, orderDetail['state'])
+                        if orderDetail['state'] == 'COMPLETE':
+                            break
+                        time.sleep(10)
 
             except Exception as e:
                 print("Error while sending BTC to Italy", e, round(saBTCBalance, 8))
