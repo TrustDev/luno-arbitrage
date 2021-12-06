@@ -10,7 +10,9 @@ if __name__ == '__main__':
     itAccount = Client(api_key_id='fngu2pkxv37wu',
                api_key_secret='Yc40rf1DBmXMP9GZ_6orCEila7-iYCCwq2Ffv44bzzE')
     saEmail = "Amasallia2012@gmail.com"
-    itEmail = "Csmaura@hotmail.com"
+    itEmail = "mattmeabtc@gmail.com"
+    itTradeFee = 0.0001
+    saTradeFee = 0.0001
     ##### Pre test for accounts are ready #########
     res = saAccount.get_balances()
     saBTC = ''
@@ -56,7 +58,7 @@ if __name__ == '__main__':
         print( "arbitrageRate", arbitrageRate)
         
         ## when arbitrage rate is below than 1%, then send BTC to italy
-        if arbitrageRate < 4:            
+        if arbitrageRate < 1:            
             res = saAccount.get_balances(assets='ZAR')
             saZarBalance = res["balance"][0]["balance"]
             saZAR = res["balance"][0]["account_id"]            
@@ -65,6 +67,7 @@ if __name__ == '__main__':
                 try:
                     orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", counter_account_id=saZAR, counter_volume=saZarBalance)
                     orderId = orderResp["order_id"]
+                    print("Buy BTC in South Africa Success, OrderID: ", orderId, "RAND Amount:", saZarBalance)
                     while True:
                         orderDetail = saAccount.get_order(orderId)
                         print("Waiting for Buy BTC in South After....", orderId, orderDetail['state'])
@@ -76,9 +79,9 @@ if __name__ == '__main__':
                 ### send BTC to italy                
                 res = saAccount.get_balances(assets='XBT')
                 saBTCBalance = float(res["balance"][0]["balance"])
-                
-                saAccount.send(address=itEmail, amount=round(saBTCBalance, 8), currency="XBT")
-
+                sendAmount = round(saBTCBalance, 8)
+                saAccount.send(address=itEmail, amount=sendAmount, currency="XBT")
+                print("Send BTC to Italy Success", sendAmount)
                 ## wait until BTC arrived
                 while True:
                     res = saAccount.get_balances(assets='XBT')
@@ -89,9 +92,9 @@ if __name__ == '__main__':
                 time.sleep(10)
                 ### exchange to EURO                
                 res = itAccount.get_balances(assets='XBT')
-                itBTCBalance = res["balance"][0]["balance"]
+                itBTCBalance = float(res["balance"][0]["balance"])
                 itBTC = res["balance"][0]["account_id"] 
-                orderResp = itAccount.post_market_order(pair="XBTEUR", type="SELL", base_account_id=itBTC, base_volume=itBTCBalance)
+                orderResp = itAccount.post_market_order(pair="XBTEUR", type="SELL", base_account_id=itBTC, base_volume=round(itBTCBalance-itTradeFee, 4))
                 orderId = orderResp["order_id"]
                 while True:
                     orderDetail = itAccount.get_order(orderId)
@@ -103,7 +106,7 @@ if __name__ == '__main__':
             except Exception as e:
                 print("Error while sending BTC to Italy", e, round(saBTCBalance, 8))
         ## when arbitrage rate is upper than 3%, then send BTC to South Africa
-        elif arbitrageRate > 4:
+        elif arbitrageRate > 1:
             res = itAccount.get_balances(assets='EUR')
             itEuroBalance = res["balance"][0]["balance"]
             itEuro = res["balance"][0]["account_id"]            
@@ -136,9 +139,9 @@ if __name__ == '__main__':
                 time.sleep(10)
                 ### exchange to ZAR                
                 res = saAccount.get_balances(assets='XBT')
-                saBTCBalance = res["balance"][0]["balance"]
+                saBTCBalance = float(res["balance"][0]["balance"])
                 saBTC = res["balance"][0]["account_id"] 
-                orderResp = saAccount.post_market_order(pair="XBTZAR", type="SELL", base_account_id=saBTC, base_volume=saBTCBalance)
+                orderResp = saAccount.post_market_order(pair="XBTZAR", type="SELL", base_account_id=saBTC, base_volume=round(saBTCBalance-saTradeFee, 4))
                 orderId = orderResp["order_id"]
                 while True:
                     orderDetail = saAccount.get_order(orderId)
