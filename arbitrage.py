@@ -109,20 +109,21 @@ if __name__ == '__main__':
         elif arbitrageRate > 1:
             res = itAccount.get_balances(assets='EUR')
             itEuroBalance = res["balance"][0]["balance"]
-            itEuro = res["balance"][0]["account_id"]            
+            itEuro = res["balance"][0]["account_id"]
             try:
                 ### selling BTC to Euro in Italy
-                try:
-                    orderResp = itAccount.post_market_order(pair="XBTEUR", type="BUY", counter_account_id=itEuro, counter_volume=itEuroBalance)
-                    orderId = orderResp["order_id"]
-                    while True:
-                        orderDetail = saAccount.get_order(orderId)
-                        print("Waiting for Buy BTC in Italy....", orderId, orderDetail['state'])
-                        if orderDetail['state'] == 'COMPLETE':
-                            break
-                        time.sleep(10)
-                except Exception as e:
-                    print("Error while buying BTC in Italy", e, itEuroBalance)
+                if itEuroBalance > 1:
+                    try:
+                        orderResp = itAccount.post_market_order(pair="XBTEUR", type="BUY", counter_account_id=itEuro, counter_volume=itEuroBalance)
+                        orderId = orderResp["order_id"]
+                        while True:
+                            orderDetail = saAccount.get_order(orderId)
+                            print("Waiting for Buy BTC in Italy....", orderId, orderDetail['state'])
+                            if orderDetail['state'] == 'COMPLETE':
+                                break
+                            time.sleep(10)
+                    except Exception as e:
+                        print("Error while buying BTC in Italy", e, itEuroBalance)
                 ### send BTC to South Africa                
                 res = itAccount.get_balances(assets='XBT')
                 itBTCBalance = float(res["balance"][0]["balance"])
