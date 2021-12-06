@@ -65,14 +65,14 @@ if __name__ == '__main__':
             saZAR = res["balance"][0]["account_id"]            
             try:
                 ### selling BTC to ZAR in South Africa
-                if saZarBalance > 1:
+                if saZarBalance > 10:
                     try:
                         orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", counter_account_id=saZAR, counter_volume=saZarBalance)
                         orderId = orderResp["order_id"]
                         print("Buy BTC in South Africa Success, OrderID: ", orderId, "RAND Amount:", saZarBalance)
                         while True:
                             orderDetail = saAccount.get_order(orderId)
-                            print("Waiting for Buy BTC in South After....", orderId, orderDetail['state'])
+                            print("Waiting for Buy BTC in South Africa....", orderId, orderDetail['state'])
                             if orderDetail['state'] == 'COMPLETE':
                                 break
                             time.sleep(10)
@@ -115,7 +115,7 @@ if __name__ == '__main__':
             itEuro = res["balance"][0]["account_id"]
             try:
                 ### selling BTC to Euro in Italy
-                if itEuroBalance > 1:
+                if itEuroBalance > 10:
                     try:
                         orderResp = itAccount.post_market_order(pair="XBTEUR", type="BUY", counter_account_id=itEuro, counter_volume=itEuroBalance)
                         orderId = orderResp["order_id"]
@@ -159,6 +159,6 @@ if __name__ == '__main__':
                 print("Error while sending BTC to Italy", e)
         ##res = saAccount.list_user_trades(pair='XBTZAR')
         ##print(res)
-        time.sleep(1)
+        time.sleep(30)
     
     
