@@ -126,6 +126,14 @@ if __name__ == '__main__':
 
                 itAccount.send(address=saEmail, amount=round(itBTCBalance, 8), currency="XBT")
                 
+                ## wait until BTC arrived
+                while True:
+                    res = itAccount.get_balances(assets='XBT')
+                    reservedBalance = float(res["balance"][0]["reserved"])
+                    if reservedBalance == 0:
+                        break
+                    time.sleep(10)
+                
                 ### exchange to ZAR                
                 res = saAccount.get_balances(assets='XBT')
                 saBTCBalance = res["balance"][0]["balance"]
