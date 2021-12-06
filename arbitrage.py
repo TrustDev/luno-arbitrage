@@ -9,7 +9,8 @@ if __name__ == '__main__':
                api_key_secret='6QhflvPxdqrhRDo1VU-qw3sdZXwCLlTCOIGBWyOkfeY')
     itAccount = Client(api_key_id='fngu2pkxv37wu',
                api_key_secret='Yc40rf1DBmXMP9GZ_6orCEila7-iYCCwq2Ffv44bzzE')
-    btcSendingFee = 0.000006
+    btcSASendingFee = 0.00008
+    btcItSendingFee = 0.00008
     ##### Pre test for accounts are ready #########
     res = saAccount.get_balances()
     saBTC = ''
@@ -77,9 +78,9 @@ if __name__ == '__main__':
                 itBTCAddress = itBTCAddress['address']
                 
                 res = saAccount.get_balances(assets='XBT')
-                saBTCBalance = float(res["balance"][0]["balance"]) - btcSendingFee
-
-                saAccount.send(address=itBTCAddress, amount=saBTCBalance, currency="XBT")
+                saBTCBalance = float(res["balance"][0]["balance"]) - btcSASendingFee
+                
+                saAccount.send(address=itBTCAddress, amount=round(saBTCBalance, 7), currency="XBT")
                 
                 ### exchange to EURO                
                 res = itAccount.get_balances(assets='XBT')
@@ -95,7 +96,7 @@ if __name__ == '__main__':
                     time.sleep(10)
 
             except Exception as e:
-                print("Error while sending BTC to Italy", e)
+                print("Error while sending BTC to Italy", e, round(saBTCBalance, 7))
         ## when arbitrage rate is upper than 3%, then send BTC to South Africa
         elif arbitrageRate > 4:
             res = itAccount.get_balances(assets='EUR')
@@ -119,9 +120,9 @@ if __name__ == '__main__':
                 saBTCAddress = saBTCAddress['address']
                 
                 res = itAccount.get_balances(assets='XBT')
-                itBTCBalance = float(res["balance"][0]["balance"]) - btcSendingFee
+                itBTCBalance = float(res["balance"][0]["balance"]) - btcItSendingFee
 
-                itAccount.send(address=saBTCAddress, amount=itBTCBalance, currency="XBT")
+                itAccount.send(address=saBTCAddress, amount=round(itBTCBalance, 7), currency="XBT")
                 
                 ### exchange to ZAR                
                 res = saAccount.get_balances(assets='XBT')
