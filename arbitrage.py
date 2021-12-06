@@ -38,6 +38,7 @@ if __name__ == '__main__':
 
     #### main logic #####
     while True:
+        print("###Trading Loop Begin####")
         ## get exchange rate between zar and euro
         response = requests.get("https://xecdapi.xe.com/v1/convert_from/?from=EUR&to=ZAR&amount=1", auth=HTTPBasicAuth('liming419944535', 'qajfi3hr0ug3g71ulc3n25ben8'))
         xrate = 0
@@ -60,7 +61,7 @@ if __name__ == '__main__':
         ## when arbitrage rate is below than 1%, then send BTC to italy
         if arbitrageRate < 1:            
             res = saAccount.get_balances(assets='ZAR')
-            saZarBalance = res["balance"][0]["balance"]
+            saZarBalance = float(res["balance"][0]["balance"])
             saZAR = res["balance"][0]["account_id"]            
             try:
                 ### selling BTC to ZAR in South Africa
@@ -110,7 +111,7 @@ if __name__ == '__main__':
         ## when arbitrage rate is upper than 3%, then send BTC to South Africa
         elif arbitrageRate > 1:
             res = itAccount.get_balances(assets='EUR')
-            itEuroBalance = res["balance"][0]["balance"]
+            itEuroBalance = float(res["balance"][0]["balance"])
             itEuro = res["balance"][0]["account_id"]
             try:
                 ### selling BTC to Euro in Italy
