@@ -86,7 +86,7 @@ if __name__ == '__main__':
                     if reservedBalance == 0:
                         break
                     time.sleep(10)
-                
+                time.sleep(10)
                 ### exchange to EURO                
                 res = itAccount.get_balances(assets='XBT')
                 itBTCBalance = res["balance"][0]["balance"]
@@ -133,7 +133,7 @@ if __name__ == '__main__':
                     if reservedBalance == 0:
                         break
                     time.sleep(10)
-                
+                time.sleep(10)
                 ### exchange to ZAR                
                 res = saAccount.get_balances(assets='XBT')
                 saBTCBalance = res["balance"][0]["balance"]
