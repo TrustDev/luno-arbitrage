@@ -64,18 +64,19 @@ if __name__ == '__main__':
             saZAR = res["balance"][0]["account_id"]            
             try:
                 ### selling BTC to ZAR in South Africa
-                try:
-                    orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", counter_account_id=saZAR, counter_volume=saZarBalance)
-                    orderId = orderResp["order_id"]
-                    print("Buy BTC in South Africa Success, OrderID: ", orderId, "RAND Amount:", saZarBalance)
-                    while True:
-                        orderDetail = saAccount.get_order(orderId)
-                        print("Waiting for Buy BTC in South After....", orderId, orderDetail['state'])
-                        if orderDetail['state'] == 'COMPLETE':
-                            break
-                        time.sleep(10)
-                except Exception as e:
-                    print("Error while buying BTC in South Africa", e, saZarBalance)
+                if saZarBalance > 1:
+                    try:
+                        orderResp = saAccount.post_market_order(pair="XBTZAR", type="BUY", counter_account_id=saZAR, counter_volume=saZarBalance)
+                        orderId = orderResp["order_id"]
+                        print("Buy BTC in South Africa Success, OrderID: ", orderId, "RAND Amount:", saZarBalance)
+                        while True:
+                            orderDetail = saAccount.get_order(orderId)
+                            print("Waiting for Buy BTC in South After....", orderId, orderDetail['state'])
+                            if orderDetail['state'] == 'COMPLETE':
+                                break
+                            time.sleep(10)
+                    except Exception as e:
+                        print("Error while buying BTC in South Africa", e, saZarBalance)
                 ### send BTC to italy                
                 res = saAccount.get_balances(assets='XBT')
                 saBTCBalance = float(res["balance"][0]["balance"])
