@@ -9,8 +9,8 @@ if __name__ == '__main__':
                api_key_secret='6QhflvPxdqrhRDo1VU-qw3sdZXwCLlTCOIGBWyOkfeY')
     itAccount = Client(api_key_id='fngu2pkxv37wu',
                api_key_secret='Yc40rf1DBmXMP9GZ_6orCEila7-iYCCwq2Ffv44bzzE')
-    btcSASendingFee = 0.00008
-    btcItSendingFee = 0.00008
+    saEmail = "Amasallia2012@gmail.com"
+    itEmail = "Csmaura@hotmail.com"
     ##### Pre test for accounts are ready #########
     res = saAccount.get_balances()
     saBTC = ''
@@ -73,14 +73,19 @@ if __name__ == '__main__':
                         time.sleep(10)
                 except Exception as e:
                     print("Error while buying BTC in South Africa", e, saZarBalance)
-                ### send BTC to italy
-                itBTCAddress = itAccount.get_funding_address(asset='XBT')
-                itBTCAddress = itBTCAddress['address']
-                
+                ### send BTC to italy                
                 res = saAccount.get_balances(assets='XBT')
-                saBTCBalance = float(res["balance"][0]["balance"]) - btcSASendingFee
+                saBTCBalance = float(res["balance"][0]["balance"])
                 
-                saAccount.send(address=itBTCAddress, amount=round(saBTCBalance, 7), currency="XBT")
+                saAccount.send(address=itEmail, amount=round(saBTCBalance, 8), currency="XBT")
+
+                ## wait until BTC arrived
+                while True:
+                    res = saAccount.get_balances(assets='XBT')
+                    reservedBalance = float(res["balance"][0]["reserved"])
+                    if reservedBalance == 0:
+                        break
+                    time.sleep(10)
                 
                 ### exchange to EURO                
                 res = itAccount.get_balances(assets='XBT')
@@ -96,7 +101,7 @@ if __name__ == '__main__':
                     time.sleep(10)
 
             except Exception as e:
-                print("Error while sending BTC to Italy", e, round(saBTCBalance, 7))
+                print("Error while sending BTC to Italy", e, round(saBTCBalance, 8))
         ## when arbitrage rate is upper than 3%, then send BTC to South Africa
         elif arbitrageRate > 4:
             res = itAccount.get_balances(assets='EUR')
@@ -120,9 +125,9 @@ if __name__ == '__main__':
                 saBTCAddress = saBTCAddress['address']
                 
                 res = itAccount.get_balances(assets='XBT')
-                itBTCBalance = float(res["balance"][0]["balance"]) - btcItSendingFee
+                itBTCBalance = float(res["balance"][0]["balance"])
 
-                itAccount.send(address=saBTCAddress, amount=round(itBTCBalance, 7), currency="XBT")
+                itAccount.send(address=saBTCAddress, amount=round(itBTCBalance, 8), currency="XBT")
                 
                 ### exchange to ZAR                
                 res = saAccount.get_balances(assets='XBT')
