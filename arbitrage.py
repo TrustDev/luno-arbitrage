@@ -112,7 +112,7 @@ if __name__ == '__main__':
                 except Exception as e:
                     print("Error while sending BTC to Italy", e, round(saBTCBalance, 8))
             ## when arbitrage rate is upper than 3%, then send BTC to South Africa
-            elif arbitrageRate >= 3:
+            elif arbitrageRate >= 2:
                 res = itAccount.get_balances(assets='EUR')
                 itEuroBalance = float(res["balance"][0]["balance"])
                 itEuro = res["balance"][0]["account_id"]
@@ -165,7 +165,8 @@ if __name__ == '__main__':
                     print("Error while sending BTC to South Africa", e, "Amount:", sendAmount)
             ##res = saAccount.list_user_trades(pair='XBTZAR')
             ##print(res)
-            time.sleep(120)
+            print("###Trading Loop End####")
+            time.sleep(300)
         except Exception as e:
             print("Error while loop whole trading", e)
     
