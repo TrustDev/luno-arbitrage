@@ -3,8 +3,16 @@ import time
 from luno_python.client import Client
 import requests
 from requests.auth import HTTPBasicAuth
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 if __name__ == '__main__':
+    driver = webdriver.Chrome('./chromedriver')
+    driver.get("https://www.xe.com/currencyconverter/convert/?Amount=1&From=EUR&To=ZAR")
+    value = driver.find_element_by_class_name("iGrAod")
+    print(value)
+    price = value.text.replace("South African Rand")
+    price = float(price)
     saAccount = Client(api_key_id='bdc6udywrcxdy',
                api_key_secret='6QhflvPxdqrhRDo1VU-qw3sdZXwCLlTCOIGBWyOkfeY')
     itAccount = Client(api_key_id='fngu2pkxv37wu',
