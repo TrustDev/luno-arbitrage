@@ -5,9 +5,11 @@ import requests
 from requests.auth import HTTPBasicAuth
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 
 if __name__ == '__main__':
     driver = webdriver.Chrome('./chromedriver')
+    driver.set_page_load_timeout(100)
     saAccount = Client(api_key_id='bdc6udywrcxdy',
                api_key_secret='6QhflvPxdqrhRDo1VU-qw3sdZXwCLlTCOIGBWyOkfeY')
     itAccount = Client(api_key_id='fngu2pkxv37wu',
@@ -57,8 +59,7 @@ if __name__ == '__main__':
                 continue
             '''            
             driver.get("https://www.xe.com/currencyconverter/convert/?Amount=1&From=EUR&To=ZAR")
-            value = driver.find_element_by_class_name("iGrAod")
-            print(value)
+            value = driver.find_element(By.CLASS_NAME, 'iGrAod')
             price = value.text.replace("South African Rand", "")
             xrate = float(price)            
             print("Exchange EURO-ZAR Rate:", xrate)
