@@ -8,11 +8,6 @@ from selenium.webdriver.common.keys import Keys
 
 if __name__ == '__main__':
     driver = webdriver.Chrome('./chromedriver')
-    driver.get("https://www.xe.com/currencyconverter/convert/?Amount=1&From=EUR&To=ZAR")
-    value = driver.find_element_by_class_name("iGrAod")
-    print(value)
-    price = value.text.replace("South African Rand")
-    price = float(price)
     saAccount = Client(api_key_id='bdc6udywrcxdy',
                api_key_secret='6QhflvPxdqrhRDo1VU-qw3sdZXwCLlTCOIGBWyOkfeY')
     itAccount = Client(api_key_id='fngu2pkxv37wu',
@@ -50,6 +45,7 @@ if __name__ == '__main__':
             print("###Trading Loop Begin####", loopCount)
             loopCount+=1
             ## get exchange rate between zar and euro
+            '''
             response = requests.get("https://xecdapi.xe.com/v1/convert_from/?from=EUR&to=ZAR&amount=1", auth=HTTPBasicAuth('liming419944535', 'qajfi3hr0ug3g71ulc3n25ben8'))
             xrate = 0
             if response.status_code == 200:
@@ -59,6 +55,8 @@ if __name__ == '__main__':
             else:
                 print("Can't fetch exchange rate, wait until get exact exchange rate ....")
                 continue
+            '''
+            
             res = saAccount.get_ticker(pair='XBTZAR')
             _br = float(res['last_trade']) # BTC to ZAR
             res = itAccount.get_ticker(pair='XBTEUR')
