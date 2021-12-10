@@ -60,7 +60,8 @@ if __name__ == '__main__':
             value = driver.find_element_by_class_name("iGrAod")
             print(value)
             price = value.text.replace("South African Rand", "")
-            price = float(price)
+            xrate = float(price)            
+            print("Exchange EURO-ZAR Rate:", xrate)
             res = saAccount.get_ticker(pair='XBTZAR')
             _br = float(res['last_trade']) # BTC to ZAR
             res = itAccount.get_ticker(pair='XBTEUR')
