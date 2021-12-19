@@ -6,6 +6,9 @@ from requests.auth import HTTPBasicAuth
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 
 options = Options()
 options.add_argument('--disk-cache=true')
@@ -22,7 +25,7 @@ s = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=s, options=options)
 
 if __name__ == '__main__':
-    driver = webdriver.Chrome('./chromedriver')
+    #driver = webdriver.Chrome('./chromedriver')
     driver.set_page_load_timeout(100)
     saAccount = Client(api_key_id='bdc6udywrcxdy',
                api_key_secret='6QhflvPxdqrhRDo1VU-qw3sdZXwCLlTCOIGBWyOkfeY')
