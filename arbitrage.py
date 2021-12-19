@@ -7,6 +7,20 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
+options = Options()
+options.add_argument('--disk-cache=true')
+options.add_argument('--load-images=false')
+options.add_argument('--ignore-certificate-errors')
+options.add_argument('--ignore-ssl-errors')
+options.add_experimental_option("excludeSwitches", ["enable-logging"])
+#options.add_argument("--start-maximized")
+options.add_argument(f"--window-size=1920,3717")
+options.add_argument("--hide-scrollbars")
+options.headless = True
+# 1887
+s = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=s, options=options)
+
 if __name__ == '__main__':
     driver = webdriver.Chrome('./chromedriver')
     driver.set_page_load_timeout(100)
