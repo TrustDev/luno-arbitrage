@@ -35,6 +35,7 @@ if __name__ == '__main__':
     itEmail = "mattmeabtc@gmail.com"
     itTradeFee = 0.0001
     saTradeFee = 0.0001
+    loopPeriod = 60
     ##### Pre test for accounts are ready #########
     res = saAccount.get_balances()
     saBTC = ''
@@ -89,7 +90,7 @@ if __name__ == '__main__':
             print( "arbitrageRate", arbitrageRate)
             
             ## when arbitrage rate is below than 1%, then send BTC to italy
-            if arbitrageRate <= 1:            
+            if arbitrageRate >= 1.6:            
                 res = saAccount.get_balances(assets='ZAR')
                 saZarBalance = float(res["balance"][0]["balance"])
                 saZAR = res["balance"][0]["account_id"]            
@@ -140,8 +141,8 @@ if __name__ == '__main__':
 
                 except Exception as e:
                     print("Error while sending BTC to Italy", e, round(saBTCBalance, 8))
-            ## when arbitrage rate is upper than 3%, then send BTC to South Africa
-            elif arbitrageRate >= 2:
+            ## when arbitrage rate is upper than 1.6%, then send BTC to South Africa
+            elif arbitrageRate < 1:
                 res = itAccount.get_balances(assets='EUR')
                 itEuroBalance = float(res["balance"][0]["balance"])
                 itEuro = res["balance"][0]["account_id"]
@@ -195,7 +196,7 @@ if __name__ == '__main__':
             ##res = saAccount.list_user_trades(pair='XBTZAR')
             ##print(res)
             print("###Trading Loop End####")
-            time.sleep(300)
+            time.sleep(loopPeriod)
         except Exception as e:
             print("Error while loop whole trading", e)
     
